@@ -29,27 +29,27 @@ Disable-ScheduledTask -TaskName "Microsoft\Windows\DiskDiagnostic\Microsoft-Wind
 # Choco Packages
 Write-Host "Installing all the Choco..."
 choco feature enable -n allowGlobalConfirmation
-choco install 7zip
-choco install git
-choco install googlechrome --ignore-checksums
-choco install firefox
-choco install heidisql --version=10.2.0.559900
-choco install openjdk11
-choco install putty
-choco install sysinternals --params "/InstallDir:C:\tools\sysinternals"
-choco install vscode
-choco install visualstudio2019community
-choco install burp-suite-free-edition
-choco install hxd
-choco install mingw
-choco install python3
-choco install python2
-choco install notepadplusplus
-choco install wsl-ubuntu-2004
-choco install openvpn
-choco install openconnect-gui
-choco install wireshark
-choco install proxifier
+choco install 7zip -r
+choco install git -r
+choco install googlechrome --ignore-checksums -r
+choco install firefox -r
+choco install heidisql --version=10.2.0.559900 -r
+choco install openjdk11 -r
+choco install putty -r
+choco install sysinternals --params "/InstallDir:C:\tools\sysinternals" -r
+choco install vscode -r
+choco install visualstudio2019community -r
+choco install burp-suite-free-edition -r
+choco install hxd -r
+choco install mingw -r
+choco install python3 -r
+choco install python2 -r
+choco install notepadplusplus -r
+choco install wsl-ubuntu-2004 -r
+choco install openvpn -r
+choco install openconnect-gui -r
+choco install wireshark -r
+choco install proxifier -r
 
 
 # GitHub

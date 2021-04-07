@@ -1,80 +1,9 @@
-
 # Box Starter Options
 $Boxstarter.RebootOk=$false 
 $Boxstarter.NoPassword=$false
 $Boxstarter.AutoLogin=$false
 Update-ExecutionPolicy Bypass
 
-
-# All of the configuration tasks that will be run.
-$Configuration = @'
-[
-    "DisableWiFiSense",
-    "DisableWebSearch",
-    "DisableAppSuggestions",
-    "DisableBackgroundApps",
-    "DisableLockScreenSpotlight",
-    "DisableLocationTracking",
-    "DisableMapUpdates",
-    "DisableFeedback",
-    "DisableAdvertisingID",
-    "DisableCortana",
-    "DisableErrorReporting",
-    "DisableAutoLogger",
-    "DisableDiagTrack",
-    "DisableWAPPush",
-    "DisableAdminShares",
-    "DisableSMB1",
-    "DisableNetDevicesAutoInst",
-    "DisableCtrldFolderAccess",
-    "DisableAutoplay",
-    "DisableAutorun",
-    "DisableSleepTimeout",
-    "DisableUpdateRestart",
-    "DisableHomeGroups",
-    "DisableSharedExperiences",
-    "DisableRemoteAssistance",
-    "DisableRemoteDesktop",
-    "DisableActionCenter",
-    "HideNetworkFromLockScreen",
-    "HideShutdownFromLockScreen",
-    "DisableStickyKeys",
-    "ShowTaskManagerDetails",
-    "ShowFileOperationsDetails",
-    "HideTaskbarSearchBox",
-    "HideTaskbarTitles",
-    "HideTaskbarPeopleIcon",
-    "ShowKnownExtensions",
-    "ShowHiddenFiles",
-    "HideSyncNotifications",
-    "HideRecentShortcuts",
-    "SetExplorerThisPC",,
-    "Hide3DObjectsFromThisPC",
-    "Hide3DObjectsFromExplorer",
-    "SetControlPanelViewIcons",
-    "SetVisualFXPerformance",
-    "UninstallMsftBloat",
-    "UninstallThirdPartyBloat",
-    "DisableXboxFeatures",
-    "DisableAdobeFlash",
-    "AddPhotoViewerOpenWith",
-    "DisableSearchAppInStore",
-]
-'@
-
-Write-Host "Tweaking some settings..."
-$tweaks = @()
-try {
-    $tweaks = $Configuration | ConvertFrom-Json
-}
-catch {
-    throw 'Unable to load configuration file!'
-}
-if ($tweaks.count -gt 0) {
-        $tweaks | ForEach-Object {
-            Invoke-Expression $_
-        }
-}
 
 # Defender
 Write-Host "Disabling Defender YOLO..."
@@ -83,19 +12,19 @@ New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender" -Nam
 Set-MpPreference -MAPSReporting Disabled
 Set-MpPreference -SubmitSamplesConsent NeverSend
 
+
 # Disable Telemetry
-Function DisableTelemetry {
-    Write-Host "Disabling Telemetry..."
-    Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection" -Name "AllowTelemetry" -Type DWord -Value 0
-    Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection" -Name "AllowTelemetry" -Type DWord -Value 0
-    Set-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Policies\DataCollection" -Name "AllowTelemetry" -Type DWord -Value 0
-    Disable-ScheduledTask -TaskName "Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser" | Out-Null
-    Disable-ScheduledTask -TaskName "Microsoft\Windows\Application Experience\ProgramDataUpdater" | Out-Null
-    Disable-ScheduledTask -TaskName "Microsoft\Windows\Autochk\Proxy" | Out-Null
-    Disable-ScheduledTask -TaskName "Microsoft\Windows\Customer Experience Improvement Program\Consolidator" | Out-Null
-    Disable-ScheduledTask -TaskName "Microsoft\Windows\Customer Experience Improvement Program\UsbCeip" | Out-Null
-    Disable-ScheduledTask -TaskName "Microsoft\Windows\DiskDiagnostic\Microsoft-Windows-DiskDiagnosticDataCollector" | Out-Null
-}
+Write-Host "Disabling Telemetry..."
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection" -Name "AllowTelemetry" -Type DWord -Value 0
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection" -Name "AllowTelemetry" -Type DWord -Value 0
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Policies\DataCollection" -Name "AllowTelemetry" -Type DWord -Value 0
+Disable-ScheduledTask -TaskName "Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser" | Out-Null
+Disable-ScheduledTask -TaskName "Microsoft\Windows\Application Experience\ProgramDataUpdater" | Out-Null
+Disable-ScheduledTask -TaskName "Microsoft\Windows\Autochk\Proxy" | Out-Null
+Disable-ScheduledTask -TaskName "Microsoft\Windows\Customer Experience Improvement Program\Consolidator" | Out-Null
+Disable-ScheduledTask -TaskName "Microsoft\Windows\Customer Experience Improvement Program\UsbCeip" | Out-Null
+Disable-ScheduledTask -TaskName "Microsoft\Windows\DiskDiagnostic\Microsoft-Windows-DiskDiagnosticDataCollector" | Out-Null
+
 
 # Choco Packages
 Write-Host "Installing all the Choco..."
@@ -121,7 +50,6 @@ choco install openvpn
 choco install openconnect-gui
 choco install wireshark
 choco install proxifier
-
 
 
 # GitHub
@@ -168,11 +96,13 @@ New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Internet Explorer"
 New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Internet Explorer\Main"
 New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Internet Explorer\Main" -Name DisableFirstRunCustomize -Value 1
 
+
 # Neo4j
 "Downloading and unzipping Neo4j..."
 Invoke-WebRequest -Uri 'https://neo4j.com/artifact.php?name=neo4j-community-4.0.0-windows.zip' -OutFile "C:\tools\neo4j.zip"
 Expand-Archive -Path "C:\tools\neo4j.zip" -DestinationPath "C:\tools\Neo4j"
 Remove-Item "C:\tools\neo4j.zip"
+
 
 # Visual Studio
 Write-Host "Downloading some Visual Studio stuff..."
@@ -184,6 +114,7 @@ Enable-WindowsOptionalFeature -FeatureName NetFx3 -Online
 # UI
 Import-Module "$env:ChocolateyInstall\helpers\chocolateyInstaller.psm1" -Force
 Set-WindowsExplorerOptions -EnableShowFileExtensions -EnableShowFullPathInTitleBar -EnableExpandToOpenFolder -EnableShowRibbon
+
 
 ## Misc
 Remove-Item -Path "C:\Users\Public\Desktop\*"
@@ -200,15 +131,9 @@ Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer
 # Show small icons in taskbar
 Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "TaskbarSmallIcons" -Type DWord -Value 1
 
-
-
 # Unpin all Taskbar icons
-Function UnpinTaskbarIcons {
-    Write-Host "Unpinning all Taskbar icons..."
-    Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband" -Name "Favorites" -Type Binary -Value ([byte[]](0xFF))
-    Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband" -Name "FavoritesResolve" -ErrorAction SilentlyContinue
-}
-
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband" -Name "Favorites" -Type Binary -Value ([byte[]](0xFF))
+Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband" -Name "FavoritesResolve" -ErrorAction SilentlyContinue
 
 
 Rename-Computer -NewName RedHost

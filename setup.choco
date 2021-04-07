@@ -99,26 +99,28 @@ New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Internet Explorer\Main
 refreshenv
 
 # Neo4j
-"Downloading and unzipping Neo4j..."
-Invoke-WebRequest -Uri 'https://neo4j.com/artifact.php?name=neo4j-community-4.0.0-windows.zip' -OutFile "C:\tools\neo4j.zip"
-Expand-Archive -Path "C:\tools\neo4j.zip" -DestinationPath "C:\tools\Neo4j"
-Remove-Item "C:\tools\neo4j.zip"
+$neo4j = Test-Path -Path "C:\tools\Neo4j"
+if (!$neo4j){
+            Write-Host "Downloading and unzipping Neo4j..."
+            Invoke-WebRequest -Uri 'https://neo4j.com/artifact.php?name=neo4j-community-4.0.0-windows.zip' -OutFile "C:\tools\neo4j.zip"
+            Expand-Archive -Path "C:\tools\neo4j.zip" -DestinationPath "C:\tools\Neo4j"
+            Remove-Item "C:\tools\neo4j.zip"
+            }
 
 
 # Visual Studio
 Write-Host "Downloading some Visual Studio stuff..."
 Invoke-WebRequest -Uri 'https://marketplace.visualstudio.com/_apis/public/gallery/publishers/VisualStudioClient/vsextensions/MicrosoftVisualStudio2017InstallerProjects/0.9.6/vspackage' -OutFile "C:\Users\User\Downloads\InstallerProjects.vsix"
 Invoke-WebRequest -Uri 'https://download.microsoft.com/download/E/E/D/EEDF18A8-4AED-4CE0-BEBE-70A83094FC5A/BuildTools_Full.exe' -OutFile "C:\Users\User\Downloads\BuildTools.exe"
-Enable-WindowsOptionalFeature -FeatureName NetFx3 -Online
 
 
-# UI
-Import-Module "$env:ChocolateyInstall\helpers\chocolateyInstaller.psm1" -Force
-Set-WindowsExplorerOptions -EnableShowFileExtensions -EnableShowFullPathInTitleBar -EnableExpandToOpenFolder -EnableShowRibbon
 
 
 ## Misc
 Remove-Item -Path "C:\Users\Public\Desktop\*"
+
+# UI
+Set-WindowsExplorerOptions -EnableShowFileExtensions -EnableShowFullPathInTitleBar -EnableExpandToOpenFolder -EnableShowRibbon
 
 # Hide Recycle Bin
 reg add HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel /v "{645FF040-5081-101B-9F08-00AA002F954E}" /d 1

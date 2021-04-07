@@ -3,6 +3,7 @@ $Boxstarter.RebootOk=$false
 $Boxstarter.NoPassword=$false
 $Boxstarter.AutoLogin=$false
 Update-ExecutionPolicy Bypass
+refreshenv
 
 
 # Defender

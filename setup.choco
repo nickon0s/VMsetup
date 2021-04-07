@@ -89,14 +89,14 @@ git clone https://github.com/jpillora/chisel C:\tools\Chisel
 git clone https://github.com/yashmundra/Shellcode-Encryption.git C:\tools\Shellcode-Encryption
 git clone https://github.com/knownsec/shellcodeloader.git C:\tools\ShellcodeLoader
 git clone https://github.com/djhohnstein/CSharpSetThreadContext.git C:\tools\CSharpShellcode
-
+refreshenv
 
 # IE first run
 Write-Host "Doing some IE BS"
 New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Internet Explorer"
 New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Internet Explorer\Main"
 New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Internet Explorer\Main" -Name DisableFirstRunCustomize -Value 1
-
+refreshenv
 
 # Neo4j
 "Downloading and unzipping Neo4j..."

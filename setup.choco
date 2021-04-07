@@ -26,7 +26,7 @@ Disable-ScheduledTask -TaskName "Microsoft\Windows\Customer Experience Improveme
 Disable-ScheduledTask -TaskName "Microsoft\Windows\Customer Experience Improvement Program\UsbCeip" | Out-Null
 Disable-ScheduledTask -TaskName "Microsoft\Windows\DiskDiagnostic\Microsoft-Windows-DiskDiagnosticDataCollector" | Out-Null
 
-<#
+
 # Choco Packages
 Write-Host "Installing all the Choco..."
 choco feature enable -n allowGlobalConfirmation
@@ -89,8 +89,7 @@ git clone https://github.com/jpillora/chisel C:\tools\Chisel
 git clone https://github.com/yashmundra/Shellcode-Encryption.git C:\tools\Shellcode-Encryption
 git clone https://github.com/knownsec/shellcodeloader.git C:\tools\ShellcodeLoader
 git clone https://github.com/djhohnstein/CSharpSetThreadContext.git C:\tools\CSharpShellcode
-#>
-refreshenv
+
 
 # IE first run
 Write-Host "Doing some IE BS"
@@ -113,9 +112,14 @@ if (!$neo4j){
 
 ## Misc
 Remove-Item -Path "C:\Users\User\Desktop\*"
+Remove-Item -Path "C:\Users\Public\Desktop\*"
 
 # UI
 Set-WindowsExplorerOptions -EnableShowFileExtensions -EnableShowFullPathInTitleBar -EnableExpandToOpenFolder -EnableShowRibbon
+
+# Disable Cortana
+New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows' -Name 'Windows Search' -ItemType Key
+New-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search' -Name AllowCortana -Type DWORD -Value 0
 
 # Hide Recycle Bin
 reg add HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel /v "{645FF040-5081-101B-9F08-00AA002F954E}" /d 1
@@ -132,6 +136,9 @@ Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer
 # Unpin all Taskbar icons
 Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband" -Name "Favorites" -Type Binary -Value ([byte[]](0xFF))
 Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband" -Name "FavoritesResolve" -ErrorAction SilentlyContinue
+
+# Start Menu: Disable Bing Search Results
+Set-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search -Name BingSearchEnabled -Type DWord -Value 0
 
 
 Rename-Computer -NewName RedHost

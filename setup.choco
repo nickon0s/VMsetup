@@ -37,8 +37,8 @@ choco install heidisql --version=10.2.0.559900 -r
 choco install openjdk11 -r
 choco install putty -r
 choco install sysinternals --params "/InstallDir:C:\tools\sysinternals" -r
-choco install vscode -r
-choco install visualstudio2019community -r
+#choco install vscode -r
+#choco install visualstudio2019community -r
 choco install burp-suite-free-edition -r
 choco install hxd -r
 choco install mingw -r

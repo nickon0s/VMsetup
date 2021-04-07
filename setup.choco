@@ -112,7 +112,7 @@ if (!$neo4j){
 
 
 ## Misc
-Remove-Item -Path "C:\Users\Public\Desktop\*"
+Remove-Item -Path "C:\Users\User\Desktop\*"
 
 # UI
 Set-WindowsExplorerOptions -EnableShowFileExtensions -EnableShowFullPathInTitleBar -EnableExpandToOpenFolder -EnableShowRibbon

@@ -30,27 +30,27 @@ Disable-ScheduledTask -TaskName "Microsoft\Windows\DiskDiagnostic\Microsoft-Wind
 # Choco Packages
 Write-Host "Installing all the Choco..."
 choco feature enable -n allowGlobalConfirmation
-choco install 7zip -r
-choco install git -r
-choco install googlechrome --ignore-checksums -r
-choco install firefox -r
-choco install heidisql --version=10.2.0.559900 -r
-choco install openjdk11 -r
-choco install putty -r
-choco install sysinternals --params "/InstallDir:C:\tools\sysinternals" -r
-#choco install vscode -r
-#choco install visualstudio2019community -r
-choco install burp-suite-free-edition -r
-choco install hxd -r
-choco install mingw -r
-choco install python3 -r
-choco install python2 -r
-choco install notepadplusplus -r
-choco install wsl-ubuntu-2004 -r
-choco install openvpn -r
-choco install openconnect-gui -r
-choco install wireshark -r
-choco install proxifier -r
+choco install 7zip -r --no-progress
+choco install git -r --no-progress
+choco install googlechrome --ignore-checksums -r --no-progress
+choco install firefox -r --no-progress
+choco install heidisql --version=10.2.0.559900 -r --no-progress
+choco install openjdk11 -r --no-progress
+choco install putty -r --no-progress
+choco install sysinternals --params "/InstallDir:C:\tools\sysinternals" -r --no-progress
+#choco install vscode -r --no-progress
+#choco install visualstudio2019community -r --no-progress
+choco install burp-suite-free-edition -r --no-progress
+choco install hxd -r --no-progress
+choco install mingw -r --no-progress
+choco install python3 -r --no-progress
+choco install python2 -r --no-progress
+choco install notepadplusplus -r --no-progress
+choco install wsl-ubuntu-2004 -r --no-progress
+choco install openvpn -r --no-progress
+choco install openconnect-gui -r --no-progress
+choco install wireshark -r --no-progress
+choco install proxifier -r --no-progress
 
 
 # GitHub
@@ -106,12 +106,6 @@ if (!$neo4j){
             Expand-Archive -Path "C:\tools\neo4j.zip" -DestinationPath "C:\tools\Neo4j"
             Remove-Item "C:\tools\neo4j.zip"
             }
-
-
-# Visual Studio
-Write-Host "Downloading some Visual Studio stuff..."
-Invoke-WebRequest -Uri 'https://marketplace.visualstudio.com/_apis/public/gallery/publishers/VisualStudioClient/vsextensions/MicrosoftVisualStudio2017InstallerProjects/0.9.6/vspackage' -OutFile "C:\Users\User\Downloads\InstallerProjects.vsix"
-Invoke-WebRequest -Uri 'https://download.microsoft.com/download/E/E/D/EEDF18A8-4AED-4CE0-BEBE-70A83094FC5A/BuildTools_Full.exe' -OutFile "C:\Users\User\Downloads\BuildTools.exe"
 
 
 

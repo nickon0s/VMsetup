@@ -264,8 +264,6 @@ Invoke-WebRequest -Uri 'https://github.com/nickon0s/VMsetup/raw/main/bginfo.bgi'
 C:\tools\sysinternals\Bginfo.exe /accepteula /iC:\Config\bginfo.bgi /timer:0
 New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run\ -Name BGInfo -Value "C:\tools\sysinternals\Bginfo.exe /accepteula /iC:\Config\bginfo.bgi /timer:0"
 
-$hostname = Read-Host "What should hostname be set as?"
-Rename-Computer -NewName $hostname
 
-Read-Host "Script complete. Press any key to restart."
+Rename-Computer -NewName RedHost
 Restart-Computer

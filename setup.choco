@@ -115,7 +115,7 @@ choco install wsl-ubuntu-2004 -r --no-progress
 choco install openvpn -r --no-progress
 choco install openconnect-gui -r --no-progress
 choco install wireshark -r --no-progress
-choco install proxifier -r --no-progress
+#choco install proxifier -r --no-progress
 
 
 # GitHub
@@ -171,7 +171,10 @@ if (!$neo4j){
             Expand-Archive -Path "C:\tools\neo4j.zip" -DestinationPath "C:\tools\Neo4j"
             Remove-Item "C:\tools\neo4j.zip"
             }
-
+# Proxycap
+Invoke-WebRequest -Uri 'https://www.proxycap.com/download/pcap536_x64.msi' -OutFile C:\tools\proxycap.msi
+msiexec /i C:\tools\proxycap.msi /quiet /norestart
+del C:\tools\proxycap.msi
 
 
 

@@ -175,7 +175,7 @@ if (!$neo4j){
 Write-Host "Downloading/Installing ProxyCap"
 Invoke-WebRequest -Uri 'https://www.proxycap.com/download/pcap536_x64.msi' -OutFile C:\tools\proxycap.msi
 msiexec /i C:\tools\proxycap.msi /quiet /norestart
-del C:\tools\proxycap.msi
+
 
 
 ## Misc

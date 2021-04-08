@@ -258,7 +258,7 @@ Remove-Item -Path "C:\Users\Public\Desktop\*"
 # Wallpaper
 
 Invoke-WebRequest -Uri 'https://github.com/nickon0s/VMsetup/raw/main/wallpaper.jpg' -OutFile "C:\Config\wallpaper.jpg"
-Invoke-WebRequest -Uri 'https://github.com/nickon0s/VMsetup/raw/main/background.bgi' -OutFile "C:\Config\bginfo.bgi"
+Invoke-WebRequest -Uri 'https://github.com/nickon0s/VMsetup/raw/main/bginfo.bgi' -OutFile "C:\Config\bginfo.bgi"
 C:\tools\sysinternals\Bginfo.exe /accepteula /iC:\Config\bginfo.bgi /timer:0
 New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run\ -Name BGInfo -Value "C:\tools\sysinternals\Bginfo.exe /accepteula /iC:\Config\bginfo.bgi /timer:0"
 

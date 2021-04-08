@@ -181,35 +181,42 @@ msiexec /i C:\tools\proxycap.msi /quiet /norestart
 ## Misc
 
 # UI
+Write-Host "Tweaking Explorer..."
 Set-WindowsExplorerOptions -EnableShowFileExtensions -EnableShowFullPathInTitleBar -EnableExpandToOpenFolder -EnableShowRibbon
-
-# Disable Cortana
-New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows' -Name 'Windows Search' -ItemType Key
-New-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search' -Name AllowCortana -Type DWORD -Value 0
-
-# Hide Recycle Bin
-reg add HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel /v "{645FF040-5081-101B-9F08-00AA002F954E}" /d 1
-
-#Hide Taskbar Search Box
-Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" -Name "SearchboxTaskbarMode" -Type DWord -Value 0
-
-# Hide Task View button
-Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "ShowTaskViewButton" -Type DWord -Value 0
-
-# Show small icons in taskbar
-Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "TaskbarSmallIcons" -Type DWord -Value 1
-
-# Unpin all Taskbar icons
-Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband" -Name "Favorites" -Type Binary -Value ([byte[]](0xFF))
-Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband" -Name "FavoritesResolve" -ErrorAction SilentlyContinue
-
-# Disable Bing Search Results
-Set-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search -Name BingSearchEnabled -Type DWord -Value 0
-
 # File explorer stuff
 Set-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name NavPaneExpandToCurrentFolder -Value 1		
 Set-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name NavPaneShowAllFolders -Value 1		
 Set-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name MMTaskbarMode -Value 2
+
+# Disable Cortana
+Write-Host "Disabling Cortana"
+New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows' -Name 'Windows Search' -ItemType Key
+New-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search' -Name AllowCortana -Type DWORD -Value 0
+
+# Hide Recycle Bin
+Write-Host "Hiding Recycle Bin"
+reg add HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel /v "{645FF040-5081-101B-9F08-00AA002F954E}" /d 1
+
+#Hide Taskbar Search Box
+Write-Host "Hiding Taskbar Search Box"
+Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" -Name "SearchboxTaskbarMode" -Type DWord -Value 0
+
+# Hide Task View button
+Write-Host "Hiding Task View"
+Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "ShowTaskViewButton" -Type DWord -Value 0
+
+# Show small icons in taskbar
+Write-Host "Making Task Bar icons small"
+Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "TaskbarSmallIcons" -Type DWord -Value 1
+
+# Unpin all Taskbar icons
+Write-Host "Removing Taskbar icons"
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband" -Name "Favorites" -Type Binary -Value ([byte[]](0xFF))
+Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband" -Name "FavoritesResolve" -ErrorAction SilentlyContinue
+
+# Disable Bing Search Results
+Write-Host "Disabling Bing Search"
+Set-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search -Name BingSearchEnabled -Type DWord -Value 0
 
 
 # Organise Start Menu
@@ -246,15 +253,19 @@ Import-StartLayout -LayoutPath "C:\Config\layout.xml" -MountPath "C:\"
 
 
 # Clean up desktop
+Write-Host "Cleaning up Desktop"
 Remove-Item -Path "C:\Users\User\Desktop\*"
 Remove-Item -Path "C:\Users\Public\Desktop\*"
 
 # Wallpaper
-
+Write-Host "Setting Wallpaper"
 Invoke-WebRequest -Uri 'https://github.com/nickon0s/VMsetup/raw/main/wallpaper.jpg' -OutFile "C:\Config\wallpaper.jpg"
 Invoke-WebRequest -Uri 'https://github.com/nickon0s/VMsetup/raw/main/bginfo.bgi' -OutFile "C:\Config\bginfo.bgi"
 C:\tools\sysinternals\Bginfo.exe /accepteula /iC:\Config\bginfo.bgi /timer:0
 New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run\ -Name BGInfo -Value "C:\tools\sysinternals\Bginfo.exe /accepteula /iC:\Config\bginfo.bgi /timer:0"
 
-Rename-Computer -NewName RedHost
+$hostname = Read-Host "What should hostname be set as?"
+Rename-Computer -NewName $hostname
+
+Read-Host "Script complete. Press any key to restart."
 Restart-Computer

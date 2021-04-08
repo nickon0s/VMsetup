@@ -245,7 +245,7 @@ echo '<LayoutModificationTemplate xmlns:defaultlayout="http://schemas.microsoft.
       </defaultlayout:StartLayout>
     </StartLayoutCollection>
   </DefaultLayoutOverride>
-</LayoutModificationTemplate>' | Out-File "C:\layout.xml"
+</LayoutModificationTemplate>' | Out-File "C:\users\User\Desktop\layout.xml"
 Import-StartLayout -LayoutPath "C:\users\User\Desktop\layout.xml" -MountPath "C:\"
 del C:\lay.xml
 

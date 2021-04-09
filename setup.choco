@@ -1,4 +1,6 @@
+New-Item -Path "C:\" -Name "Config" -ItemType "directory"
 echo "0" > 'C:\Config\config.txt'
+
 # Box Starter Options
 $Boxstarter.RebootOk=$false 
 $Boxstarter.NoPassword=$false

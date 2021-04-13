@@ -1,6 +1,3 @@
-New-Item -Path "C:\" -Name "Config" -ItemType "directory"
-echo "0" > 'C:\Config\config.txt'
-
 # Box Starter Options
 $Boxstarter.RebootOk=$false 
 $Boxstarter.NoPassword=$false
@@ -10,209 +7,174 @@ refreshenv
 
 
 # Defender
-$progress = type 'C:\Config\config.txt'
-if ($progress -lt 1){
-    Write-Host "Disabling Defender YOLO..."
-    Set-MpPreference -DisableRealtimeMonitoring $true
-    New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender" -Name DisableAntiSpyware -Value 1 -PropertyType DWORD -Force
-    Set-MpPreference -MAPSReporting Disabled
-    Set-MpPreference -SubmitSamplesConsent NeverSend
-    echo "1" > 'C:\Config\config.txt'
-}
+Write-Host "Disabling Defender YOLO..."
+Set-MpPreference -DisableRealtimeMonitoring $true
+New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender" -Name DisableAntiSpyware -Value 1 -PropertyType DWORD -Force
+Set-MpPreference -MAPSReporting Disabled
+Set-MpPreference -SubmitSamplesConsent NeverSend
 
 
 # Disable Telemetry
-$progress = type 'C:\Config\config.txt'
-if ($progress -lt 2) {
-    Write-Host "Disabling Telemetry..."
-    Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection" -Name "AllowTelemetry" -Type DWord -Value 0
-    Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection" -Name "AllowTelemetry" -Type DWord -Value 0
-    Set-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Policies\DataCollection" -Name "AllowTelemetry" -Type DWord -Value 0
-    Disable-ScheduledTask -TaskName "Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser" | Out-Null
-    Disable-ScheduledTask -TaskName "Microsoft\Windows\Application Experience\ProgramDataUpdater" | Out-Null
-    Disable-ScheduledTask -TaskName "Microsoft\Windows\Autochk\Proxy" | Out-Null
-    Disable-ScheduledTask -TaskName "Microsoft\Windows\Customer Experience Improvement Program\Consolidator" | Out-Null
-    Disable-ScheduledTask -TaskName "Microsoft\Windows\Customer Experience Improvement Program\UsbCeip" | Out-Null
-    Disable-ScheduledTask -TaskName "Microsoft\Windows\DiskDiagnostic\Microsoft-Windows-DiskDiagnosticDataCollector" | Out-Null
-    echo "2" > 'C:\Config\config.txt'
-}
-
+Write-Host "Disabling Telemetry..."
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection" -Name "AllowTelemetry" -Type DWord -Value 0
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection" -Name "AllowTelemetry" -Type DWord -Value 0
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Policies\DataCollection" -Name "AllowTelemetry" -Type DWord -Value 0
+Disable-ScheduledTask -TaskName "Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser" | Out-Null
+Disable-ScheduledTask -TaskName "Microsoft\Windows\Application Experience\ProgramDataUpdater" | Out-Null
+Disable-ScheduledTask -TaskName "Microsoft\Windows\Autochk\Proxy" | Out-Null
+Disable-ScheduledTask -TaskName "Microsoft\Windows\Customer Experience Improvement Program\Consolidator" | Out-Null
+Disable-ScheduledTask -TaskName "Microsoft\Windows\Customer Experience Improvement Program\UsbCeip" | Out-Null
+Disable-ScheduledTask -TaskName "Microsoft\Windows\DiskDiagnostic\Microsoft-Windows-DiskDiagnosticDataCollector" | Out-Null
 
 # Remove One Drive
-$progress = type 'C:\Config\config.txt'
-if ($progress -lt 3) {
-    Write-Host "Removing One Drive"
-    if (Test-Path "$env:systemroot\System32\OneDriveSetup.exe") {
-        & "$env:systemroot\System32\OneDriveSetup.exe" /uninstall
-    }
-    if (Test-Path "$env:systemroot\SysWOW64\OneDriveSetup.exe") {
-        & "$env:systemroot\SysWOW64\OneDriveSetup.exe" /uninstall
-    }
-    rm -Recurse -Force -ErrorAction SilentlyContinue "$env:localappdata\Microsoft\OneDrive"
-    rm -Recurse -Force -ErrorAction SilentlyContinue "$env:programdata\Microsoft OneDrive"
-    rm -Recurse -Force -ErrorAction SilentlyContinue "C:\OneDriveTemp"
-    New-PSDrive -PSProvider "Registry" -Root "HKEY_CLASSES_ROOT" -Name "HKCR"
-    mkdir -Force "HKCR:\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}"
-    sp "HKCR:\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" "System.IsPinnedToNameSpaceTree" 0
-    mkdir -Force "HKCR:\Wow6432Node\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}"
-    sp "HKCR:\Wow6432Node\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" "System.IsPinnedToNameSpaceTree" 0
-    Remove-PSDrive "HKCR"
-    reg load "hku\Default" "C:\Users\Default\NTUSER.DAT"
-    reg delete "HKEY_USERS\Default\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v "OneDriveSetup" /f
-    reg unload "hku\Default"
-    rm -Force -ErrorAction SilentlyContinue "$env:userprofile\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk"
-    echo "Removing scheduled task"
-    Get-ScheduledTask -TaskPath '\' -TaskName 'OneDrive*' -ea SilentlyContinue | Unregister-ScheduledTask -Confirm:$false
-    echo "3" > 'C:\Config\config.txt'
+Write-Host "Removing One Drive"
+if (Test-Path "$env:systemroot\System32\OneDriveSetup.exe") {
+    & "$env:systemroot\System32\OneDriveSetup.exe" /uninstall
 }
+if (Test-Path "$env:systemroot\SysWOW64\OneDriveSetup.exe") {
+    & "$env:systemroot\SysWOW64\OneDriveSetup.exe" /uninstall
+}
+rm -Recurse -Force -ErrorAction SilentlyContinue "$env:localappdata\Microsoft\OneDrive"
+rm -Recurse -Force -ErrorAction SilentlyContinue "$env:programdata\Microsoft OneDrive"
+rm -Recurse -Force -ErrorAction SilentlyContinue "C:\OneDriveTemp"
+New-PSDrive -PSProvider "Registry" -Root "HKEY_CLASSES_ROOT" -Name "HKCR"
+mkdir -Force "HKCR:\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}"
+sp "HKCR:\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" "System.IsPinnedToNameSpaceTree" 0
+mkdir -Force "HKCR:\Wow6432Node\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}"
+sp "HKCR:\Wow6432Node\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" "System.IsPinnedToNameSpaceTree" 0
+Remove-PSDrive "HKCR"
+reg load "hku\Default" "C:\Users\Default\NTUSER.DAT"
+reg delete "HKEY_USERS\Default\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v "OneDriveSetup" /f
+reg unload "hku\Default"
+rm -Force -ErrorAction SilentlyContinue "$env:userprofile\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk"
+echo "Removing scheduled task"
+Get-ScheduledTask -TaskPath '\' -TaskName 'OneDrive*' -ea SilentlyContinue | Unregister-ScheduledTask -Confirm:$false
 
 
 # Remove the Windows crap
-$progress = type 'C:\Config\config.txt'
-if ($progress -lt 4) {
-    Write-Host "Removing all the bloat..."
-    Get-AppxPackage Microsoft.3DBuilder | Remove-AppxPackage
-    Get-AppxPackage Microsoft.WindowsAlarms | Remove-AppxPackage
-    Get-AppxPackage Microsoft.BingFinance | Remove-AppxPackage
-    Get-AppxPackage Microsoft.BingNews | Remove-AppxPackage
-    Get-AppxPackage Microsoft.BingSports | Remove-AppxPackage
-    Get-AppxPackage Microsoft.BingWeather | Remove-AppxPackage
-    Get-AppxPackage *Bubble* | Remove-AppxPackage
-    Get-AppxPackage king.com.CandyCrush* | Remove-AppxPackage
-    Get-AppxPackage Microsoft.CommsPhone | Remove-AppxPackage
-    Get-AppxPackage *Dell* | Remove-AppxPackage
-    Get-AppxPackage *Dropbox* | Remove-AppxPackage
-    Get-AppxPackage *Facebook* | Remove-AppxPackage
-    Get-AppxPackage Microsoft.WindowsFeedbackHub | Remove-AppxPackage
-    Get-AppxPackage Microsoft.Getstarted | Remove-AppxPackage
-    Get-AppxPackage microsoft.windowscommunicationsapps | Remove-AppxPackage
-    Get-AppxPackage Microsoft.WindowsMaps | Remove-AppxPackage
-    Get-AppxPackage *MarchofEmpires* | Remove-AppxPackage
-    Get-AppxPackage *McAfee* | Remove-AppxPackage
-    Get-AppxPackage Microsoft.Messaging | Remove-AppxPackage
-    Get-AppxPackage *Minecraft* | Remove-AppxPackage
-    Get-AppxPackage *Netflix* | Remove-AppxPackage
-    Get-AppxPackage Microsoft.MicrosoftOfficeHub | Remove-AppxPackage
-    Get-AppxPackage Microsoft.OneConnect | Remove-AppxPackage
-    Get-AppxPackage Microsoft.Office.OneNote | Remove-AppxPackage
-    Get-AppxPackage Microsoft.People | Remove-AppxPackage
-    Get-AppxPackage Microsoft.WindowsPhone | Remove-AppxPackage
-    Get-AppxPackage Microsoft.Windows.Photos | Remove-AppxPackage
-    Get-AppxPackage Microsoft.SkypeApp | Remove-AppxPackage
-    Get-AppxPackage Microsoft.WindowsSoundRecorder | Remove-AppxPackage
-    Get-AppxPackage *Solitaire* | Remove-AppxPackage
-    Get-AppxPackage Microsoft.MicrosoftStickyNotes | Remove-AppxPackage
-    Get-AppxPackage Microsoft.Office.Sway | Remove-AppxPackage
-    Get-AppxPackage *Twitter* | Remove-AppxPackage
-    Get-AppxPackage Microsoft.XboxApp | Remove-AppxPackage
-    Get-AppxPackage Microsoft.XboxIdentityProvider | Remove-AppxPackage
-    Get-AppxPackage Microsoft.ZuneMusic | Remove-AppxPackage
-    Get-AppxPackage Microsoft.ZuneVideo | Remove-AppxPackage
-    echo "4" > 'C:\Config\config.txt'
-}
+Write-Host "Removing all the bloat..."
+Get-AppxPackage Microsoft.3DBuilder | Remove-AppxPackage
+Get-AppxPackage Microsoft.WindowsAlarms | Remove-AppxPackage
+Get-AppxPackage Microsoft.BingFinance | Remove-AppxPackage
+Get-AppxPackage Microsoft.BingNews | Remove-AppxPackage
+Get-AppxPackage Microsoft.BingSports | Remove-AppxPackage
+Get-AppxPackage Microsoft.BingWeather | Remove-AppxPackage
+Get-AppxPackage *Bubble* | Remove-AppxPackage
+Get-AppxPackage king.com.CandyCrush* | Remove-AppxPackage
+Get-AppxPackage Microsoft.CommsPhone | Remove-AppxPackage
+Get-AppxPackage *Dell* | Remove-AppxPackage
+Get-AppxPackage *Dropbox* | Remove-AppxPackage
+Get-AppxPackage *Facebook* | Remove-AppxPackage
+Get-AppxPackage Microsoft.WindowsFeedbackHub | Remove-AppxPackage
+Get-AppxPackage Microsoft.Getstarted | Remove-AppxPackage
+Get-AppxPackage microsoft.windowscommunicationsapps | Remove-AppxPackage
+Get-AppxPackage Microsoft.WindowsMaps | Remove-AppxPackage
+Get-AppxPackage *MarchofEmpires* | Remove-AppxPackage
+Get-AppxPackage *McAfee* | Remove-AppxPackage
+Get-AppxPackage Microsoft.Messaging | Remove-AppxPackage
+Get-AppxPackage *Minecraft* | Remove-AppxPackage
+Get-AppxPackage *Netflix* | Remove-AppxPackage
+Get-AppxPackage Microsoft.MicrosoftOfficeHub | Remove-AppxPackage
+Get-AppxPackage Microsoft.OneConnect | Remove-AppxPackage
+Get-AppxPackage Microsoft.Office.OneNote | Remove-AppxPackage
+Get-AppxPackage Microsoft.People | Remove-AppxPackage
+Get-AppxPackage Microsoft.WindowsPhone | Remove-AppxPackage
+Get-AppxPackage Microsoft.Windows.Photos | Remove-AppxPackage
+Get-AppxPackage Microsoft.SkypeApp | Remove-AppxPackage
+Get-AppxPackage Microsoft.WindowsSoundRecorder | Remove-AppxPackage
+Get-AppxPackage *Solitaire* | Remove-AppxPackage
+Get-AppxPackage Microsoft.MicrosoftStickyNotes | Remove-AppxPackage
+Get-AppxPackage Microsoft.Office.Sway | Remove-AppxPackage
+Get-AppxPackage *Twitter* | Remove-AppxPackage
+Get-AppxPackage Microsoft.XboxApp | Remove-AppxPackage
+Get-AppxPackage Microsoft.XboxIdentityProvider | Remove-AppxPackage
+Get-AppxPackage Microsoft.ZuneMusic | Remove-AppxPackage
+Get-AppxPackage Microsoft.ZuneVideo | Remove-AppxPackage
 
 
 # Choco Packages
-$progress = type 'C:\Config\config.txt'
-if ($progress -lt 5) {
-    Write-Host "Installing all the Choco..."
-    choco feature enable -n allowGlobalConfirmation
-    choco install 7zip -r --no-progress
-    choco install git -r --no-progress
-    choco install googlechrome --ignore-checksums -r --no-progress
-    choco install firefox -r --no-progress
-    choco install heidisql --version=10.2.0.559900 -r --no-progress
-    choco install openjdk11 -r --no-progress
-    choco install putty -r --no-progress
-    choco install sysinternals --params "/InstallDir:C:\tools\sysinternals" -r --no-progress
-    #choco install vscode -r --no-progress
-    #choco install visualstudio2019community -r --no-progress
-    choco install burp-suite-free-edition -r --no-progress
-    choco install hxd -r --no-progress
-    choco install mingw -r --no-progress
-    choco install python3 -r --no-progress
-    choco install python2 -r --no-progress
-    choco install notepadplusplus -r --no-progress
-    choco install wsl-ubuntu-2004 -r --no-progress
-    choco install openvpn -r --no-progress
-    choco install openconnect-gui -r --no-progress
-    choco install wireshark -r --no-progress
-    #choco install proxifier -r --no-progress
-    echo "5" > 'C:\Config\config.txt'
-}
+Write-Host "Installing all the Choco..."
+choco feature enable -n allowGlobalConfirmation
+choco install 7zip -r --no-progress
+choco install git -r --no-progress
+choco install googlechrome --ignore-checksums -r --no-progress
+choco install firefox -r --no-progress
+choco install heidisql --version=10.2.0.559900 -r --no-progress
+choco install openjdk11 -r --no-progress
+choco install putty -r --no-progress
+choco install sysinternals --params "/InstallDir:C:\tools\sysinternals" -r --no-progress
+#choco install vscode -r --no-progress
+#choco install visualstudio2019community -r --no-progress
+choco install burp-suite-free-edition -r --no-progress
+choco install hxd -r --no-progress
+choco install mingw -r --no-progress
+choco install python3 -r --no-progress
+choco install python2 -r --no-progress
+choco install notepadplusplus -r --no-progress
+choco install wsl-ubuntu-2004 -r --no-progress
+choco install openvpn -r --no-progress
+choco install openconnect-gui -r --no-progress
+choco install wireshark -r --no-progress
+#choco install proxifier -r --no-progress
 
 
 # GitHub
-$progress = type 'C:\Config\config.txt'
-if ($progress -lt 6) {
-    Write-Host "Cloning some gits..."
-    git clone https://github.com/dnSpy/dnSpy.git C:\tools\dnSpy
-    git clone https://github.com/BloodHoundAD/SharpHound3.git C:\tools\SharpHound3
-    git clone https://github.com/dafthack/MailSniper.git C:\tools\MailSniper
-    git clone https://github.com/decoder-it/juicy-potato.git C:\tools\juicy-potato
-    git clone https://github.com/djhohnstein/SharpChrome.git C:\tools\SharpChrome
-    git clone https://github.com/FortyNorthSecurity/Egress-Assess.git C:\tools\Egress-Assess
-    git clone https://github.com/FSecureLABS/SharpGPOAbuse.git C:\tools\SharpGPOAbuse
-    git clone https://github.com/gentilkiwi/mimikatz.git C:\tools\mimikatz
-    git clone https://github.com/GhostPack/Seatbelt.git C:\tools\Seatbelt
-    git clone https://github.com/HarmJ0y/DAMP.git C:\tools\DAMP
-    git clone https://github.com/hfiref0x/UACME.git C:\tools\UACME
-    git clone https://github.com/leechristensen/SpoolSample.git C:\tools\SpoolSample
-    git clone https://github.com/NetSPI/PowerUpSQL.git C:\tools\PowerUpSQL
-    git clone https://github.com/p3nt4/PowerShdll.git C:\tools\PowerShdll
-    git clone https://github.com/PowerShellMafia/PowerSploit.git C:\tools\PowerSploit
-    git clone https://github.com/rasta-mouse/MiscTools.git C:\tools\MiscTools
-    git clone https://github.com/rasta-mouse/Sherlock.git C:\tools\Sherlock
-    git clone https://github.com/rasta-mouse/Watson.git C:\tools\Watson
-    git clone https://github.com/tevora-threat/SharpView.git C:\tools\SharpView
-    git clone https://github.com/TheWover/donut.git C:\tools\donut
-    git clone https://github.com/ZeroPointSecurity/PhishingTemplates.git C:\tools\PhishingTemplates
-    git clone https://github.com/BloodHoundAD/BloodHound.git C:\tools\BloodHound
-    git clone https://github.com/mkaring/ConfuserEx.git C:\tools\ConfuserEx
-    git clone https://github.com/TheWover/donut.git C:\tools\donut
-    git clone https://github.com/Ne0nd0g/go-shellcode.git C:\tools\go-shellcode
-    git clone https://github.com/p3nt4/PowerShdll.git C:\tools\PowerShdll
-    git clone https://github.com/Mr-Un1k0d3r/RedTeamCCode.git C:\tools\RedTeamCCode
-    git clone https://github.com/GhostPack/Rubeus.git C:\tools\Rubeus
-    git clone https://github.com/optiv/ScareCrow C:\tools\ScareCrow
-    git clone https://github.com/shantanu561993/SharpChisel.git C:\tools\SharpChisel
-    git clone https://github.com/jpillora/chisel C:\tools\Chisel
-    git clone https://github.com/yashmundra/Shellcode-Encryption.git C:\tools\Shellcode-Encryption
-    git clone https://github.com/knownsec/shellcodeloader.git C:\tools\ShellcodeLoader
-    git clone https://github.com/djhohnstein/CSharpSetThreadContext.git C:\tools\CSharpShellcode
-    echo "6" > 'C:\Config\config.txt'
-}
-    
+Write-Host "Cloning some gits..."
+git clone https://github.com/dnSpy/dnSpy.git C:\tools\dnSpy
+git clone https://github.com/BloodHoundAD/SharpHound3.git C:\tools\SharpHound3
+git clone https://github.com/dafthack/MailSniper.git C:\tools\MailSniper
+git clone https://github.com/decoder-it/juicy-potato.git C:\tools\juicy-potato
+git clone https://github.com/djhohnstein/SharpChrome.git C:\tools\SharpChrome
+git clone https://github.com/FortyNorthSecurity/Egress-Assess.git C:\tools\Egress-Assess
+git clone https://github.com/FSecureLABS/SharpGPOAbuse.git C:\tools\SharpGPOAbuse
+git clone https://github.com/gentilkiwi/mimikatz.git C:\tools\mimikatz
+git clone https://github.com/GhostPack/Seatbelt.git C:\tools\Seatbelt
+git clone https://github.com/HarmJ0y/DAMP.git C:\tools\DAMP
+git clone https://github.com/hfiref0x/UACME.git C:\tools\UACME
+git clone https://github.com/leechristensen/SpoolSample.git C:\tools\SpoolSample
+git clone https://github.com/NetSPI/PowerUpSQL.git C:\tools\PowerUpSQL
+git clone https://github.com/p3nt4/PowerShdll.git C:\tools\PowerShdll
+git clone https://github.com/PowerShellMafia/PowerSploit.git C:\tools\PowerSploit
+git clone https://github.com/rasta-mouse/MiscTools.git C:\tools\MiscTools
+git clone https://github.com/rasta-mouse/Sherlock.git C:\tools\Sherlock
+git clone https://github.com/rasta-mouse/Watson.git C:\tools\Watson
+git clone https://github.com/tevora-threat/SharpView.git C:\tools\SharpView
+git clone https://github.com/TheWover/donut.git C:\tools\donut
+git clone https://github.com/ZeroPointSecurity/PhishingTemplates.git C:\tools\PhishingTemplates
+git clone https://github.com/BloodHoundAD/BloodHound.git C:\tools\BloodHound
+git clone https://github.com/mkaring/ConfuserEx.git C:\tools\ConfuserEx
+git clone https://github.com/TheWover/donut.git C:\tools\donut
+git clone https://github.com/Ne0nd0g/go-shellcode.git C:\tools\go-shellcode
+git clone https://github.com/p3nt4/PowerShdll.git C:\tools\PowerShdll
+git clone https://github.com/Mr-Un1k0d3r/RedTeamCCode.git C:\tools\RedTeamCCode
+git clone https://github.com/GhostPack/Rubeus.git C:\tools\Rubeus
+git clone https://github.com/optiv/ScareCrow C:\tools\ScareCrow
+git clone https://github.com/shantanu561993/SharpChisel.git C:\tools\SharpChisel
+git clone https://github.com/jpillora/chisel C:\tools\Chisel
+git clone https://github.com/yashmundra/Shellcode-Encryption.git C:\tools\Shellcode-Encryption
+git clone https://github.com/knownsec/shellcodeloader.git C:\tools\ShellcodeLoader
+git clone https://github.com/djhohnstein/CSharpSetThreadContext.git C:\tools\CSharpShellcode
+
 
 # IE first run
-$progress = type 'C:\Config\config.txt'
-if ($progress -lt 7) {
-    Write-Host "Doing some IE BS"
-    New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Internet Explorer"
-    New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Internet Explorer\Main"
-    New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Internet Explorer\Main" -Name DisableFirstRunCustomize -Value 1
-    refreshenv
-    echo "7" > 'C:\Config\config.txt'
-}
+Write-Host "Doing some IE BS"
+New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Internet Explorer"
+New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Internet Explorer\Main"
+New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Internet Explorer\Main" -Name DisableFirstRunCustomize -Value 1
+refreshenv
 
 # Neo4j
-$progress = type 'C:\Config\config.txt'
-if ($progress -lt 8) {
-    Write-Host "Downloading and unzipping Neo4j..."
-    Invoke-WebRequest -Uri 'https://neo4j.com/artifact.php?name=neo4j-community-4.0.0-windows.zip' -OutFile "C:\tools\neo4j.zip"
-    Expand-Archive -Path "C:\tools\neo4j.zip" -DestinationPath "C:\tools\Neo4j"
-    Remove-Item "C:\tools\neo4j.zip"
-    echo "8" > 'C:\Config\config.txt'
-}
-
+$neo4j = Test-Path -Path "C:\tools\Neo4j"
+if (!$neo4j){
+            Write-Host "Downloading and unzipping Neo4j..."
+            Invoke-WebRequest -Uri 'https://neo4j.com/artifact.php?name=neo4j-community-4.0.0-windows.zip' -OutFile "C:\tools\neo4j.zip"
+            Expand-Archive -Path "C:\tools\neo4j.zip" -DestinationPath "C:\tools\Neo4j"
+            Remove-Item "C:\tools\neo4j.zip"
+            }
 # Proxycap
-$progress = type 'C:\Config\config.txt'
-if ($progress -lt 9) {
-    Write-Host "Downloading/Installing ProxyCap"
-    Invoke-WebRequest -Uri 'https://www.proxycap.com/download/pcap536_x64.msi' -OutFile C:\tools\proxycap.msi
-    msiexec /i C:\tools\proxycap.msi /quiet /norestart
-    echo "9" > 'C:\Config\config.txt'
-}
+Write-Host "Downloading/Installing ProxyCap"
+Invoke-WebRequest -Uri 'https://www.proxycap.com/download/pcap536_x64.msi' -OutFile C:\tools\proxycap.msi
+msiexec /i C:\tools\proxycap.msi /quiet /norestart
 
 
 
@@ -221,83 +183,73 @@ if ($progress -lt 9) {
 # UI
 Write-Host "Tweaking Explorer..."
 Set-WindowsExplorerOptions -EnableShowFileExtensions -EnableShowFullPathInTitleBar -EnableExpandToOpenFolder -EnableShowRibbon
-
-$progress = type 'C:\Config\config.txt'
-if ($progress -lt 10) {
 # File explorer stuff
-    Set-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name NavPaneExpandToCurrentFolder -Value 1		
-    Set-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name NavPaneShowAllFolders -Value 1		
-    Set-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name MMTaskbarMode -Value 2
+Set-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name NavPaneExpandToCurrentFolder -Value 1		
+Set-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name NavPaneShowAllFolders -Value 1		
+Set-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name MMTaskbarMode -Value 2
 
+# Disable Cortana
+Write-Host "Disabling Cortana"
+New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows' -Name 'Windows Search' -ItemType Key
+New-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search' -Name AllowCortana -Type DWORD -Value 0
 
-    ## Add a check if these exist before continuing
-    # Disable Cortana
-    Write-Host "Disabling Cortana"
-    New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows' -Name 'Windows Search' -ItemType Key
-    New-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search' -Name AllowCortana -Type DWORD -Value 0
+# Hide Recycle Bin
+Write-Host "Hiding Recycle Bin"
+reg add HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel /v "{645FF040-5081-101B-9F08-00AA002F954E}" /d 1
 
-    # Hide Recycle Bin
-    Write-Host "Hiding Recycle Bin"
-    reg add HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel /v "{645FF040-5081-101B-9F08-00AA002F954E}" /d 1
+#Hide Taskbar Search Box
+Write-Host "Hiding Taskbar Search Box"
+Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" -Name "SearchboxTaskbarMode" -Type DWord -Value 0
 
-    #Hide Taskbar Search Box
-    Write-Host "Hiding Taskbar Search Box"
-    Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" -Name "SearchboxTaskbarMode" -Type DWord -Value 0
+# Hide Task View button
+Write-Host "Hiding Task View"
+Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "ShowTaskViewButton" -Type DWord -Value 0
 
-    # Hide Task View button
-    Write-Host "Hiding Task View"
-    Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "ShowTaskViewButton" -Type DWord -Value 0
+# Show small icons in taskbar
+Write-Host "Making Task Bar icons small"
+Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "TaskbarSmallIcons" -Type DWord -Value 1
 
-    # Show small icons in taskbar
-    Write-Host "Making Task Bar icons small"
-    Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "TaskbarSmallIcons" -Type DWord -Value 1
+# Unpin all Taskbar icons
+Write-Host "Removing Taskbar icons"
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband" -Name "Favorites" -Type Binary -Value ([byte[]](0xFF))
+Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband" -Name "FavoritesResolve" -ErrorAction SilentlyContinue
 
-    # Unpin all Taskbar icons
-    Write-Host "Removing Taskbar icons"
-    Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband" -Name "Favorites" -Type Binary -Value ([byte[]](0xFF))
-    Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband" -Name "FavoritesResolve" -ErrorAction SilentlyContinue
-
-    # Disable Bing Search Results
-    Write-Host "Disabling Bing Search"
-    Set-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search -Name BingSearchEnabled -Type DWord -Value 0
-    echo "10" > 'C:\Config\config.txt'
-}
+# Disable Bing Search Results
+Write-Host "Disabling Bing Search"
+Set-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search -Name BingSearchEnabled -Type DWord -Value 0
 
 
 # Organise Start Menu
-$progress = type 'C:\Config\config.txt'
-if ($progress -lt 11) {
-    New-Item -Path C:\ -Name Config -ItemType Directory -ErrorAction SilentlyContinue
-    Write-Host "Setting up Start Menu..."
-    echo '<LayoutModificationTemplate xmlns:defaultlayout="http://schemas.microsoft.com/Start/2014/FullDefaultLayout" xmlns:start="http://schemas.microsoft.com/Start/2014/StartLayout" Version="1" xmlns="http://schemas.microsoft.com/Start/2014/LayoutModification">
-      <LayoutOptions StartTileGroupCellWidth="6" />
-      <DefaultLayoutOverride>
-        <StartLayoutCollection>
-          <defaultlayout:StartLayout GroupCellWidth="6">
-            <start:Group Name="">
-              <start:DesktopApplicationTile Size="2x2" Column="4" Row="2" DesktopApplicationLinkPath="%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\Proxifier\Proxifier.lnk" />
-              <start:Tile Size="2x2" Column="0" Row="4" AppUserModelID="CanonicalGroupLimited.Ubuntu20.04onWindows_79rhkp1fndgsc!ubuntu2004" />
-              <start:DesktopApplicationTile Size="2x2" Column="0" Row="8" DesktopApplicationLinkPath="%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\Visual Studio 2019.lnk" />
-              <start:DesktopApplicationTile Size="2x2" Column="4" Row="6" DesktopApplicationLinkPath="%APPDATA%\Microsoft\Windows\Start Menu\Programs\Burp Suite Community Edition.lnk" />
-              <start:DesktopApplicationTile Size="2x2" Column="2" Row="6" DesktopApplicationLinkPath="%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\HeidiSQL\HeidiSQL.lnk" />
-              <start:DesktopApplicationTile Size="2x2" Column="2" Row="2" DesktopApplicationLinkPath="%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\Wireshark.lnk" />
-              <start:DesktopApplicationTile Size="2x2" Column="2" Row="4" DesktopApplicationLinkPath="%APPDATA%\Microsoft\Windows\Start Menu\Programs\Windows PowerShell\Windows PowerShell.lnk" />
-              <start:DesktopApplicationTile Size="2x2" Column="2" Row="8" DesktopApplicationLinkPath="%APPDATA%\Microsoft\Windows\Start Menu\Programs\Visual Studio Code\Visual Studio Code.lnk" />
-              <start:DesktopApplicationTile Size="2x2" Column="4" Row="0" DesktopApplicationLinkPath="%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\Microsoft Edge.lnk" />
-              <start:DesktopApplicationTile Size="2x2" Column="0" Row="6" DesktopApplicationLinkPath="%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\Notepad++.lnk" />
-              <start:DesktopApplicationTile Size="2x2" Column="0" Row="2" DesktopApplicationLinkPath="%APPDATA%\Microsoft\Windows\Start Menu\Programs\PUTTY.lnk" />
-              <start:DesktopApplicationTile Size="2x2" Column="4" Row="8" DesktopApplicationLinkPath="%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\Accessories\Remote Desktop Connection.lnk" />
-              <start:DesktopApplicationTile Size="2x2" Column="0" Row="0" DesktopApplicationLinkPath="%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\Firefox.lnk" />
-              <start:DesktopApplicationTile Size="2x2" Column="2" Row="0" DesktopApplicationLinkPath="%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\Google Chrome.lnk" />
-              <start:DesktopApplicationTile Size="2x2" Column="4" Row="4" DesktopApplicationLinkPath="%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\HxD Hex Editor\HxD.lnk" />
-            </start:Group>
-          </defaultlayout:StartLayout>
-        </StartLayoutCollection>
-      </DefaultLayoutOverride>
-    </LayoutModificationTemplate>' | Out-File "C:\Config\layout.xml"
-    Import-StartLayout -LayoutPath "C:\Config\layout.xml" -MountPath "C:\"
-    echo "11" > 'C:\Config\config.txt'
-}
+New-Item -Path C:\ -Name Config -ItemType Directory -ErrorAction SilentlyContinue
+Write-Host "Setting up Start Menu..."
+echo '<LayoutModificationTemplate xmlns:defaultlayout="http://schemas.microsoft.com/Start/2014/FullDefaultLayout" xmlns:start="http://schemas.microsoft.com/Start/2014/StartLayout" Version="1" xmlns="http://schemas.microsoft.com/Start/2014/LayoutModification">
+  <LayoutOptions StartTileGroupCellWidth="6" />
+  <DefaultLayoutOverride>
+    <StartLayoutCollection>
+      <defaultlayout:StartLayout GroupCellWidth="6">
+        <start:Group Name="">
+          <start:DesktopApplicationTile Size="2x2" Column="4" Row="2" DesktopApplicationLinkPath="%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\Proxifier\Proxifier.lnk" />
+          <start:Tile Size="2x2" Column="0" Row="4" AppUserModelID="CanonicalGroupLimited.Ubuntu20.04onWindows_79rhkp1fndgsc!ubuntu2004" />
+          <start:DesktopApplicationTile Size="2x2" Column="0" Row="8" DesktopApplicationLinkPath="%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\Visual Studio 2019.lnk" />
+          <start:DesktopApplicationTile Size="2x2" Column="4" Row="6" DesktopApplicationLinkPath="%APPDATA%\Microsoft\Windows\Start Menu\Programs\Burp Suite Community Edition.lnk" />
+          <start:DesktopApplicationTile Size="2x2" Column="2" Row="6" DesktopApplicationLinkPath="%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\HeidiSQL\HeidiSQL.lnk" />
+          <start:DesktopApplicationTile Size="2x2" Column="2" Row="2" DesktopApplicationLinkPath="%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\Wireshark.lnk" />
+          <start:DesktopApplicationTile Size="2x2" Column="2" Row="4" DesktopApplicationLinkPath="%APPDATA%\Microsoft\Windows\Start Menu\Programs\Windows PowerShell\Windows PowerShell.lnk" />
+          <start:DesktopApplicationTile Size="2x2" Column="2" Row="8" DesktopApplicationLinkPath="%APPDATA%\Microsoft\Windows\Start Menu\Programs\Visual Studio Code\Visual Studio Code.lnk" />
+          <start:DesktopApplicationTile Size="2x2" Column="4" Row="0" DesktopApplicationLinkPath="%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\Microsoft Edge.lnk" />
+          <start:DesktopApplicationTile Size="2x2" Column="0" Row="6" DesktopApplicationLinkPath="%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\Notepad++.lnk" />
+          <start:DesktopApplicationTile Size="2x2" Column="0" Row="2" DesktopApplicationLinkPath="%APPDATA%\Microsoft\Windows\Start Menu\Programs\PUTTY.lnk" />
+          <start:DesktopApplicationTile Size="2x2" Column="4" Row="8" DesktopApplicationLinkPath="%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\Accessories\Remote Desktop Connection.lnk" />
+          <start:DesktopApplicationTile Size="2x2" Column="0" Row="0" DesktopApplicationLinkPath="%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\Firefox.lnk" />
+          <start:DesktopApplicationTile Size="2x2" Column="2" Row="0" DesktopApplicationLinkPath="%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\Google Chrome.lnk" />
+          <start:DesktopApplicationTile Size="2x2" Column="4" Row="4" DesktopApplicationLinkPath="%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\HxD Hex Editor\HxD.lnk" />
+        </start:Group>
+      </defaultlayout:StartLayout>
+    </StartLayoutCollection>
+  </DefaultLayoutOverride>
+</LayoutModificationTemplate>' | Out-File "C:\Config\layout.xml"
+Import-StartLayout -LayoutPath "C:\Config\layout.xml" -MountPath "C:\"
+
 
 
 # Clean up desktop
@@ -306,20 +258,12 @@ Remove-Item -Path "C:\Users\User\Desktop\*"
 Remove-Item -Path "C:\Users\Public\Desktop\*"
 
 # Wallpaper
-$progress = type 'C:\Config\config.txt'
-if ($progress -lt 12) {
 Write-Host "Setting Wallpaper"
 Invoke-WebRequest -Uri 'https://github.com/nickon0s/VMsetup/raw/main/wallpaper.jpg' -OutFile "C:\Config\wallpaper.jpg"
 Invoke-WebRequest -Uri 'https://github.com/nickon0s/VMsetup/raw/main/bginfo.bgi' -OutFile "C:\Config\bginfo.bgi"
 C:\tools\sysinternals\Bginfo.exe /accepteula /iC:\Config\bginfo.bgi /timer:0
 New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run\ -Name BGInfo -Value "C:\tools\sysinternals\Bginfo.exe /accepteula /iC:\Config\bginfo.bgi /timer:0"
-echo "12" > 'C:\Config\config.txt'
-}
 
-$progress = type 'C:\Config\config.txt'
-if ($progress -lt 13) {
-    Rename-Computer -NewName RedHost
-    echo "13" > 'C:\Config\config.txt'
-}
 
+Rename-Computer -NewName RedHost
 Restart-Computer

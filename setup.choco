@@ -173,9 +173,9 @@ if (!$neo4j){
             Remove-Item "C:\tools\neo4j.zip"
             }
 # Proxycap
-Write-Host "Downloading/Installing ProxyCap"
-Invoke-WebRequest -Uri 'https://www.proxycap.com/download/pcap536_x64.msi' -OutFile C:\tools\proxycap.msi
-msiexec /i C:\tools\proxycap.msi /quiet /norestart
+# Write-Host "Downloading/Installing ProxyCap"
+# Invoke-WebRequest -Uri 'https://www.proxycap.com/download/pcap536_x64.msi' -OutFile C:\tools\proxycap.msi
+# msiexec /i C:\tools\proxycap.msi /quiet /norestart
 
 
 
@@ -184,10 +184,6 @@ msiexec /i C:\tools\proxycap.msi /quiet /norestart
 # UI
 Write-Host "Tweaking Explorer..."
 Set-WindowsExplorerOptions -EnableShowFileExtensions -EnableShowFullPathInTitleBar -EnableExpandToOpenFolder -EnableShowRibbon
-# File explorer stuff
-Set-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name NavPaneExpandToCurrentFolder -Value 1		
-Set-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name NavPaneShowAllFolders -Value 1		
-Set-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name MMTaskbarMode -Value 2
 
 # Disable Cortana
 Write-Host "Disabling Cortana"
@@ -218,39 +214,6 @@ Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explo
 # Disable Bing Search Results
 Write-Host "Disabling Bing Search"
 Set-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search -Name BingSearchEnabled -Type DWord -Value 0
-
-
-# Organise Start Menu
-New-Item -Path C:\ -Name Config -ItemType Directory -ErrorAction SilentlyContinue
-Write-Host "Setting up Start Menu..."
-echo '<LayoutModificationTemplate xmlns:defaultlayout="http://schemas.microsoft.com/Start/2014/FullDefaultLayout" xmlns:start="http://schemas.microsoft.com/Start/2014/StartLayout" Version="1" xmlns="http://schemas.microsoft.com/Start/2014/LayoutModification">
-  <LayoutOptions StartTileGroupCellWidth="6" />
-  <DefaultLayoutOverride>
-    <StartLayoutCollection>
-      <defaultlayout:StartLayout GroupCellWidth="6">
-        <start:Group Name="">
-          <start:DesktopApplicationTile Size="2x2" Column="4" Row="2" DesktopApplicationLinkPath="%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\Proxifier\Proxifier.lnk" />
-          <start:Tile Size="2x2" Column="0" Row="4" AppUserModelID="CanonicalGroupLimited.Ubuntu20.04onWindows_79rhkp1fndgsc!ubuntu2004" />
-          <start:DesktopApplicationTile Size="2x2" Column="0" Row="8" DesktopApplicationLinkPath="%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\Visual Studio 2019.lnk" />
-          <start:DesktopApplicationTile Size="2x2" Column="4" Row="6" DesktopApplicationLinkPath="%APPDATA%\Microsoft\Windows\Start Menu\Programs\Burp Suite Community Edition.lnk" />
-          <start:DesktopApplicationTile Size="2x2" Column="2" Row="6" DesktopApplicationLinkPath="%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\HeidiSQL\HeidiSQL.lnk" />
-          <start:DesktopApplicationTile Size="2x2" Column="2" Row="2" DesktopApplicationLinkPath="%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\Wireshark.lnk" />
-          <start:DesktopApplicationTile Size="2x2" Column="2" Row="4" DesktopApplicationLinkPath="%APPDATA%\Microsoft\Windows\Start Menu\Programs\Windows PowerShell\Windows PowerShell.lnk" />
-          <start:DesktopApplicationTile Size="2x2" Column="2" Row="8" DesktopApplicationLinkPath="%APPDATA%\Microsoft\Windows\Start Menu\Programs\Visual Studio Code\Visual Studio Code.lnk" />
-          <start:DesktopApplicationTile Size="2x2" Column="4" Row="0" DesktopApplicationLinkPath="%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\Microsoft Edge.lnk" />
-          <start:DesktopApplicationTile Size="2x2" Column="0" Row="6" DesktopApplicationLinkPath="%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\Notepad++.lnk" />
-          <start:DesktopApplicationTile Size="2x2" Column="0" Row="2" DesktopApplicationLinkPath="%APPDATA%\Microsoft\Windows\Start Menu\Programs\PUTTY.lnk" />
-          <start:DesktopApplicationTile Size="2x2" Column="4" Row="8" DesktopApplicationLinkPath="%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\Accessories\Remote Desktop Connection.lnk" />
-          <start:DesktopApplicationTile Size="2x2" Column="0" Row="0" DesktopApplicationLinkPath="%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\Firefox.lnk" />
-          <start:DesktopApplicationTile Size="2x2" Column="2" Row="0" DesktopApplicationLinkPath="%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\Google Chrome.lnk" />
-          <start:DesktopApplicationTile Size="2x2" Column="4" Row="4" DesktopApplicationLinkPath="%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\HxD Hex Editor\HxD.lnk" />
-        </start:Group>
-      </defaultlayout:StartLayout>
-    </StartLayoutCollection>
-  </DefaultLayoutOverride>
-</LayoutModificationTemplate>' | Out-File "C:\Config\layout.xml"
-Import-StartLayout -LayoutPath "C:\Config\layout.xml" -MountPath "C:\"
-
 
 
 # Clean up desktop

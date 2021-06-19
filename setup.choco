@@ -117,6 +117,7 @@ choco install openconnect-gui -r --no-progress
 choco install wireshark -r --no-progress
 #choco install proxifier -r --no-progress
 choco install mullvad-app -r --no-progress
+choco install mobaxterm -r --no-progress
 
 
 # GitHub

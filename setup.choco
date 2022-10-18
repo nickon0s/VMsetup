@@ -193,5 +193,4 @@ Write-Host "Cleaning up Desktop"
 Remove-Item -Path "C:\Users\User\Desktop\*"
 Remove-Item -Path "C:\Users\Public\Desktop\*"
 
-Rename-Computer -NewName RedHost
 Restart-Computer

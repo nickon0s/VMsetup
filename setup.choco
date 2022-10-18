@@ -109,8 +109,6 @@ choco install burp-suite-free-edition -r --no-progress
 choco install hxd -r --no-progress
 choco install mingw -r --no-progress
 choco install python3 -r --no-progress
-choco install python2 -r --no-progress
-choco install notepadplusplus -r --no-progress
 choco install wsl-ubuntu-2004 -r --no-progress
 choco install openvpn -r --no-progress
 choco install openconnect-gui -r --no-progress
@@ -119,44 +117,24 @@ choco install wireshark -r --no-progress
 choco install mullvad-app -r --no-progress
 choco install mobaxterm -r --no-progress
 
-
 # GitHub
 Write-Host "Cloning some gits..."
 git clone https://github.com/dnSpy/dnSpy.git C:\tools\dnSpy
-git clone https://github.com/BloodHoundAD/SharpHound3.git C:\tools\SharpHound3
 git clone https://github.com/dafthack/MailSniper.git C:\tools\MailSniper
-git clone https://github.com/decoder-it/juicy-potato.git C:\tools\juicy-potato
 git clone https://github.com/djhohnstein/SharpChrome.git C:\tools\SharpChrome
-git clone https://github.com/FortyNorthSecurity/Egress-Assess.git C:\tools\Egress-Assess
-git clone https://github.com/FSecureLABS/SharpGPOAbuse.git C:\tools\SharpGPOAbuse
 git clone https://github.com/gentilkiwi/mimikatz.git C:\tools\mimikatz
 git clone https://github.com/GhostPack/Seatbelt.git C:\tools\Seatbelt
-git clone https://github.com/HarmJ0y/DAMP.git C:\tools\DAMP
-git clone https://github.com/hfiref0x/UACME.git C:\tools\UACME
-git clone https://github.com/leechristensen/SpoolSample.git C:\tools\SpoolSample
 git clone https://github.com/NetSPI/PowerUpSQL.git C:\tools\PowerUpSQL
-git clone https://github.com/p3nt4/PowerShdll.git C:\tools\PowerShdll
 git clone https://github.com/PowerShellMafia/PowerSploit.git C:\tools\PowerSploit
-git clone https://github.com/rasta-mouse/MiscTools.git C:\tools\MiscTools
-git clone https://github.com/rasta-mouse/Sherlock.git C:\tools\Sherlock
-git clone https://github.com/rasta-mouse/Watson.git C:\tools\Watson
 git clone https://github.com/tevora-threat/SharpView.git C:\tools\SharpView
 git clone https://github.com/TheWover/donut.git C:\tools\donut
-git clone https://github.com/ZeroPointSecurity/PhishingTemplates.git C:\tools\PhishingTemplates
 git clone https://github.com/BloodHoundAD/BloodHound.git C:\tools\BloodHound
 git clone https://github.com/mkaring/ConfuserEx.git C:\tools\ConfuserEx
 git clone https://github.com/TheWover/donut.git C:\tools\donut
-git clone https://github.com/Ne0nd0g/go-shellcode.git C:\tools\go-shellcode
-git clone https://github.com/p3nt4/PowerShdll.git C:\tools\PowerShdll
-git clone https://github.com/Mr-Un1k0d3r/RedTeamCCode.git C:\tools\RedTeamCCode
 git clone https://github.com/GhostPack/Rubeus.git C:\tools\Rubeus
 git clone https://github.com/optiv/ScareCrow C:\tools\ScareCrow
 git clone https://github.com/shantanu561993/SharpChisel.git C:\tools\SharpChisel
 git clone https://github.com/jpillora/chisel C:\tools\Chisel
-git clone https://github.com/yashmundra/Shellcode-Encryption.git C:\tools\Shellcode-Encryption
-git clone https://github.com/knownsec/shellcodeloader.git C:\tools\ShellcodeLoader
-git clone https://github.com/djhohnstein/CSharpSetThreadContext.git C:\tools\CSharpShellcode
-
 
 # IE first run
 Write-Host "Doing some IE BS"
@@ -173,13 +151,6 @@ if (!$neo4j){
             Expand-Archive -Path "C:\tools\neo4j.zip" -DestinationPath "C:\tools\Neo4j"
             Remove-Item "C:\tools\neo4j.zip"
             }
-# Proxycap
-# Write-Host "Downloading/Installing ProxyCap"
-# Invoke-WebRequest -Uri 'https://www.proxycap.com/download/pcap536_x64.msi' -OutFile C:\tools\proxycap.msi
-# msiexec /i C:\tools\proxycap.msi /quiet /norestart
-
-
-
 ## Misc
 
 # UI
